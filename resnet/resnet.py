@@ -16,29 +16,24 @@ class block(nn.Module):
 
     def forward(self, x):
         original = x
-        # print(x.shape)
+
         x = self.conv1(x)
         x = self.bn1(x)
         x = self.relu(x)
-        # print("con1 bn", x.shape)
+
         x = self.conv2(x)
         x = self.bn2(x)
         x = self.relu(x)
-        # print("con2 ", x.shape)
+
         x = self.conv3(x)
         x = self.bn3(x)
         x = self.relu(x)
-        # print("con3 ", x.shape)
-        # print(self.downsample)
+
         if self.downsample:
-            # print(x.shape)
             original = self.downsample(original)
-        #     print("downsampling ", x.shape)
-        # print("merging")
+
         x += original
-        # print(x.shape)
         x = self.relu(x)
-        print("1 block done", x.shape)
         return x
     
 class ResNet(nn.Module):
@@ -64,19 +59,14 @@ class ResNet(nn.Module):
         x = self.bn1(x)
         x = self.pool(x)
         x = self.relu(x)
+
         x = self.layer1(x)
-        print("layer 1 shape: ", x.shape)
         x = self.layer2(x)
-        print("layer 2 shape: ", x.shape)
         x = self.layer3(x)
-        print("layer 3")
         x = self.layer4(x)
-        print("layer 4 ", x.shape)
 
         x = self.avgPool(x)
-        print(x.shape)
         x = x.reshape(x.shape[0], -1)
-        print(x.shape)
         x = self.linear(x)
 
         return x
@@ -86,11 +76,9 @@ class ResNet(nn.Module):
 
     def _make_layer(self, block, in_channel, stride, num_blocks):
         layers = []
-        print(self.in_channel)
         downsample = nn.Sequential(nn.Conv2d(self.in_channel, in_channel * 4, kernel_size = 1, stride = stride),
                                    nn.BatchNorm2d(in_channel * 4))
         
-
         layers.append(block(self.in_channel, in_channel * 4, stride = stride, downsample = downsample))
         
         for i in range(num_blocks - 1):
