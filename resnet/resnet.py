@@ -69,10 +69,7 @@ class ResNet(nn.Module):
         x = x.reshape(x.shape[0], -1)
         x = self.linear(x)
 
-        return x
-
-
-        
+        return x        
 
     def _make_layer(self, block, in_channel, stride, num_blocks):
         layers = []
